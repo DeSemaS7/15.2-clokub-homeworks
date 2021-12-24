@@ -17,7 +17,7 @@ resource "yandex_storage_object" "cat-picture" {
 ```terraform
 resource "yandex_compute_instance_group" "ig-1" {
   name               = "fixed-ig"
-  service_account_id = "aje4audtbr11ce49mleb"
+  service_account_id = yandex_iam_service_account.ig-manager.id
   instance_template {
     platform_id = "standard-v1"
     resources {
@@ -83,5 +83,18 @@ resource "yandex_lb_network_load_balancer" "balancer" {
     external_address_spec {
       ip_version = "ipv4"
     }
+  }
+  attached_target_group {
+    target_group_id = yandex_compute_instance_group.ig-1.load_balancer[0].target_group_id
+
+    healthcheck {
+      name = "http"
+      http_options {
+        port = 80
+        path = "/"
+      }
+    }
+  }
+}
 ```
 Проверил работоспособность и удалением вм и заменой index.html
