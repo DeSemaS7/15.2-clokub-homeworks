@@ -1,8 +1,3 @@
-resource "yandex_iam_service_account" "ig-manager" {
-  name        = "ig-manager"
-  description = "service account to manage IG"
-}
-
 resource "yandex_compute_instance_group" "ig-1" {
   name               = "fixed-ig"
   service_account_id = yandex_iam_service_account.ig-manager.id
